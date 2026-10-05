@@ -1,0 +1,49 @@
+text,query_type,intent,scenario
+"Checkout said unsuccessful, but my card was debited.",payment,payment_failed,contradictory_status
+There are two identical charges for the same basket on my statement.,payment,duplicate_charge,natural_phrasing
+Can I pay with UPI instead of a card?,payment,payment_methods,regional_context
+"The invoice says paid, yet the app asks me to pay again.",payment,payment_issue,contradictory_status
+"My bank approved the transfer, but the shop still says unpaid.",payment,payment_issue,contradictory_status
+I was billed twice after refreshing the payment screen.,payment,duplicate_charge,natural_phrasing
+The card terminal rejects every attempt even though other stores work.,payment,payment_failed,natural_phrasing
+Which payment methods are supported for international orders?,payment,payment_methods,natural_phrasing
+The package has not reached me even though the expected window ended yesterday.,delivery,delivery_delay,natural_phrasing
+Tracking says delivered but there is nothing at my address.,delivery,missing_delivery,contradictory_status
+Where can I see the carrier updates for my parcel?,delivery,track_order,natural_phrasing
+Please send my parcel to a different building before dispatch.,delivery,delivery_address,natural_phrasing
+Is weekend delivery offered in my area?,delivery,delivery_options,natural_phrasing
+It has been a week since dispatch and there is no sign of the box.,delivery,delivery_delay,natural_phrasing
+"The courier marked it handed over, but nobody here received it.",delivery,missing_delivery,contradictory_status
+Can you tell me which courier currently has my shipment?,delivery,track_order,natural_phrasing
+I returned the headset and would like my money back.,refund,refund_request,natural_phrasing
+My refund was initiated two weeks ago and still has not appeared.,refund,refund_pending,natural_phrasing
+What is your refund policy for opened packaging?,refund,refund_policy,natural_phrasing
+Please reverse the purchase because the item is defective.,refund,refund_request,natural_phrasing
+The return is approved but the credit has not reached my bank.,refund,refund_pending,contradictory_status
+How long do I have to request a refund after delivery?,refund,refund_policy,natural_phrasing
+I cancelled the service and need the amount refunded.,refund,refund_request,natural_phrasing
+I got a refund email but my statement has no credit.,refund,refund_pending,contradictory_status
+The password reset link keeps expiring before I can log in.,account_access,account_access,natural_phrasing
+I need to create a new account for my business.,account_access,account_creation,natural_phrasing
+How do I change the phone number linked to my profile?,account_access,account_management,natural_phrasing
+The site says my account is locked even with the correct password.,account_access,account_access,natural_phrasing
+I signed up but never received the verification email.,account_access,account_creation,natural_phrasing
+Please close my old profile and keep the new one.,account_access,account_management,natural_phrasing
+My two accounts need to be merged under one email.,account_access,account_management,natural_phrasing
+I cannot receive a password recovery code.,account_access,account_access,natural_phrasing
+The mobile app exits as soon as I open the order screen.,technical_support,technical_app_crash,natural_phrasing
+The product page loads blank in both Chrome and Firefox.,technical_support,technical_website_error,natural_phrasing
+The checkout button spins forever and never shows a confirmation.,technical_support,technical_checkout_error,natural_phrasing
+An error banner appears after I sign in to the app.,technical_support,technical_login_error,natural_phrasing
+The new smart speaker will not pair with my phone.,technical_support,technical_device_setup,natural_phrasing
+The device overheats and switches itself off after ten minutes.,technical_support,technical_product_malfunction,natural_phrasing
+The website keeps returning a 500 error when I view my cart.,technical_support,technical_website_error,natural_phrasing
+The app freezes whenever I try to upload a photo.,technical_support,technical_app_crash,natural_phrasing
+Please cancel my purchase before it ships.,other,order_cancellation,natural_phrasing
+Could you email me a tax invoice for last month's purchase?,other,invoice_request,natural_phrasing
+Does this laptop support two external monitors?,other,product_information,natural_phrasing
+I want to complain about how your support team handled my case.,other,general_complaint,natural_phrasing
+I would prefer to speak with a person about my case.,other,human_request,natural_phrasing
+Please stop sending me promotional newsletters.,other,newsletter,natural_phrasing
+Can I modify the color of an order I already placed?,other,order_change,natural_phrasing
+Is there a fee if I cancel today?,other,cancellation_fee,natural_phrasing

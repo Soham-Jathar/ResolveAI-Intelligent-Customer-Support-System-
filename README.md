@@ -100,10 +100,11 @@ python scripts/evaluate.py --data data/generic/test.csv
 python scripts/evaluate_query_type.py --test data/generic/test.csv
 python scripts/evaluate_retrieval.py
 python scripts/evaluate_safety.py
+python scripts/evaluate_challenge_set.py
 python -m pytest -q
 ```
 
-These scripts write reports and plots to the ignored `outputs/` directory. Classifier evaluation includes accuracy, macro/weighted F1, per-class results, and a confusion matrix; retrieval reports Recall@1/3/5; the authored safety set checks priority and escalation. The evaluation is for this prototype dataset, **not** a claim about live support traffic. See [data and evaluation](docs/DATA_AND_EVALUATION.md).
+These scripts write reports and plots to the ignored `outputs/` directory. Classifier evaluation includes accuracy, macro/weighted F1, per-class results, and a confusion matrix; retrieval reports Recall@1/3/5; the authored safety set checks priority and escalation. The 48-message challenge set additionally produces an error-analysis report and exposes how much natural wording can lower the scores. It is project-authored after training, not independent external validation. None of these figures are a claim about live support traffic. See [data and evaluation](docs/DATA_AND_EVALUATION.md).
 
 For the optional DistilBERT comparison, install `requirements-advanced.txt`, then run:
 

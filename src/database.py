@@ -6,7 +6,7 @@ import os
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, String, Text, create_engine, inspect, text
+from sqlalchemy import DateTime, Float, String, Text, create_engine, inspect, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
 from src.config import ROOT
@@ -30,6 +30,10 @@ class Ticket(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     customer_message: Mapped[str] = mapped_column(Text)
     intent: Mapped[str] = mapped_column(String(64))
+    # Nullable so tickets saved before the independent query-type model can
+    # still be read after the schema upgrade.
+    query_type: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    query_type_confidence: Mapped[float | None] = mapped_column(Float, nullable=True)
     confidence: Mapped[str] = mapped_column(String(16))
     sentiment: Mapped[str] = mapped_column(String(16))
     priority: Mapped[str] = mapped_column(String(16))
@@ -50,7 +54,8 @@ class Ticket(Base):
         return {
             "id": self.id, "created_at": self.created_at.isoformat(),
             "customer_message": self.customer_message, "intent": self.intent,
-            "query_type": query_type_for(self.intent),
+            "query_type": self.query_type or query_type_for(self.intent),
+            "query_type_confidence": self.query_type_confidence,
             "confidence": float(self.confidence), "sentiment": self.sentiment,
             "priority": self.priority, "department": self.department,
             "escalated": self.escalated == "true", "status": self.status,
@@ -107,26 +112,28 @@ class TicketReview(Base):
 
 def initialise_database() -> None:
     Base.metadata.create_all(bind=engine)
-    # SQLite create_all does not add new columns to an existing local database.
-    if DATABASE_URL.startswith("sqlite"):
-        columns = {column["name"] for column in inspect(engine).get_columns("tickets")}
-        migrations = {
-            "attachment_name": "ALTER TABLE tickets ADD COLUMN attachment_name VARCHAR(255)",
-            "verification": "ALTER TABLE tickets ADD COLUMN verification TEXT DEFAULT '{}'",
-            "language": "ALTER TABLE tickets ADD COLUMN language TEXT DEFAULT '{}'",
-            "duplicate_candidates": "ALTER TABLE tickets ADD COLUMN duplicate_candidates TEXT DEFAULT '[]'",
-            "agent_reply": "ALTER TABLE tickets ADD COLUMN agent_reply TEXT",
-        }
-        with engine.begin() as connection:
-            for column, statement in migrations.items():
-                if column not in columns:
-                    connection.execute(text(statement))
+    # create_all does not add columns to existing SQLite or PostgreSQL tables.
+    columns = {column["name"] for column in inspect(engine).get_columns("tickets")}
+    migrations = {
+        "query_type": "ALTER TABLE tickets ADD COLUMN query_type VARCHAR(64)",
+        "query_type_confidence": "ALTER TABLE tickets ADD COLUMN query_type_confidence FLOAT",
+        "attachment_name": "ALTER TABLE tickets ADD COLUMN attachment_name VARCHAR(255)",
+        "verification": "ALTER TABLE tickets ADD COLUMN verification TEXT DEFAULT '{}'",
+        "language": "ALTER TABLE tickets ADD COLUMN language TEXT DEFAULT '{}'",
+        "duplicate_candidates": "ALTER TABLE tickets ADD COLUMN duplicate_candidates TEXT DEFAULT '[]'",
+        "agent_reply": "ALTER TABLE tickets ADD COLUMN agent_reply TEXT",
+    }
+    with engine.begin() as connection:
+        for column, statement in migrations.items():
+            if column not in columns:
+                connection.execute(text(statement))
 
 
 def save_ticket(result: dict, customer_message: str, attachment_name: str | None = None) -> dict:
     with SessionLocal() as session:
         ticket = Ticket(
             customer_message=mask_sensitive_data(customer_message), intent=result["intent"], confidence=str(result["confidence"]),
+            query_type=result["query_type"], query_type_confidence=result.get("query_type_confidence"),
             sentiment=result["sentiment"], priority=result["priority"], department=result["department"],
             escalated=str(result["escalate_to_human"]).lower(),
             escalation_reasons=json.dumps(result["escalation_reasons"]), entities=json.dumps(mask_entities(result["entities"])),

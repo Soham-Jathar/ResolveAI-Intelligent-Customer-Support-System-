@@ -6,6 +6,7 @@
 2. Build the documented technical-support extension because Bitext has no dedicated technical class.
 3. Create the stratified held-out split before training.
 4. Fit the fine-intent baseline only on `data/generic/train.csv` and evaluate once on `data/generic/test.csv`.
+5. Evaluate the unchanged models on `data/challenge_eval.csv` to measure sensitivity to later-authored natural phrasing; do not train or tune on this challenge set and then call it untouched.
 
 ## Metrics
 
@@ -14,10 +15,11 @@
 - Retrieval: Recall@5 over labelled policy queries.
 - Safety policy: priority accuracy plus escalation precision, recall, and F1 on a separate authored safety set.
 - Model comparison: use the same held-out split for TF-IDF + Logistic Regression and DistilBERT.
+- Challenge set: report broad and fine-intent accuracy/macro F1 separately, plus confusion pairs and example-level errors. Run `python scripts/evaluate_challenge_set.py` to produce `outputs/challenge_eval_metrics.json`, `outputs/challenge_eval_predictions.csv`, and `outputs/challenge_error_analysis.md`.
 
 ## Error analysis
 
-Review likely confusion pairs such as delayed delivery versus tracking, payment failure versus duplicate charge, refund request versus pending refund, and website error versus checkout error. Separately inspect false negatives for critical safety language because those errors are more consequential than routine routing mistakes.
+Review the generated challenge errors, including delayed delivery versus tracking, payment versus checkout errors, refund request versus pending refund, and account management versus access. The current challenge set is project-authored and small; its lower scores should be reported alongside, not hidden behind, the main held-out results. Separately inspect false negatives for critical safety language because those errors are more consequential than routine routing mistakes.
 
 ## Current limitations
 

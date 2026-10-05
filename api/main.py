@@ -87,6 +87,7 @@ def metrics() -> dict:
         "transformer": read_metric("distilbert_generic_intent_test_metrics.json"),
         "retrieval": read_metric("retrieval_eval_metrics.json"),
         "safety": read_metric("safety_eval_metrics.json"),
+        "challenge": read_metric("challenge_eval_metrics.json"),
     }
 
 

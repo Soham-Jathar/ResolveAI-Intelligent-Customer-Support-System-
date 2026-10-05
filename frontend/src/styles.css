@@ -13,6 +13,13 @@
 .quality-metric p{margin:9px 0 0;color:#667085;font-size:.7rem;line-height:1.45}
 .quality-method,.quality-caveat{margin:0;color:#475467;font-size:.78rem;line-height:1.65}
 .quality-caveat{margin-top:7px;color:#667085}
+.quality-challenge{margin-top:25px;padding:22px;border:1px solid #dce5f5;border-radius:14px;background:#f8faff}
+.quality-challenge h3{margin:0 0 8px;font-size:1.08rem;letter-spacing:-.035em}
+.quality-challenge p:not(.eyebrow){margin:8px 0;color:#475467;font-size:.78rem;line-height:1.6}
+.quality-challenge-scores{display:grid;grid-template-columns:repeat(2,minmax(0,190px));gap:12px;margin:16px 0}
+.dark-mode .quality-challenge{background:#0d1930;border-color:#2f456c}
+.dark-mode .quality-challenge h3{color:#f3f6ff}
+.dark-mode .quality-challenge p:not(.eyebrow){color:#aebbd2}
 .app-footer{font-size:.72rem;line-height:1.5}
 .dark-mode .quality-intro{background:linear-gradient(120deg,#111a2d,#172847);border-color:#273653}
 .dark-mode .quality-intro h1{color:#f3f6ff}
